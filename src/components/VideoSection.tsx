@@ -1,8 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export function VideoSection() {
   const [videoEnded, setVideoEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Try to play the video on component mount
+    const video = videoRef.current;
+    if (video) {
+      video.play().catch((error) => {
+        console.log('Autoplay failed, video needs user interaction:', error);
+      });
+    }
+  }, []);
 
   const handleReplay = () => {
     if (videoRef.current) {
@@ -17,8 +27,8 @@ export function VideoSection() {
       <video
         ref={videoRef}
         className="w-full h-full object-cover"
-        autoPlay
         playsInline
+        controls
         onEnded={() => setVideoEnded(true)}
       >
         <source
